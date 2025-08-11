@@ -1,26 +1,42 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function Register() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (password !== confirmPassword) {
       alert("Passwords do not match");
       return;
     }
-    // Handle registration logic here
-    console.log("Username:", username, "Email:", email, "Password:", password);
+
+    try {
+      await axios.post("http://localhost:5000/auth/register", {
+        username,
+        email,
+        password,
+      });
+
+      alert("Registration successful! Please log in.");
+      navigate("/login");
+    } catch (err) {
+      console.error(err.response?.data || err.message);
+      alert(err.response?.data || "Registration failed");
+    }
   };
 
   return (
     <div className="bg-black min-h-screen flex items-center justify-center px-4">
       <div className="w-full max-w-md bg-gray-900 rounded-lg shadow-lg p-8">
         <h2 className="text-3xl text-white font-bold mb-6 text-center">Register</h2>
+
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label htmlFor="username" className="block mb-2 text-gray-300 font-semibold">

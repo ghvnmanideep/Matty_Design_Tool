@@ -1,18 +1,33 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { GoogleOAuthProvider } from '@react-oauth/google';
+import { Link, useNavigate } from "react-router-dom";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import GLogin from "./GLogin";
+import axios from "axios";
 
 const CLIENT_ID = "551070839040-qh22gqelveth5aaiqfan1fm43v0tvs7s.apps.googleusercontent.com";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log("Username:", username, "Password:", password);
+    try {
+      // Send login request to backend
+      const res = await axios.post("http://localhost:5000/auth/login", { username, password });
+      const { token, username: user, role } = res.data;
+
+      // Store token & user in sessionStorage
+      sessionStorage.setItem("token", token);
+      sessionStorage.setItem("user", JSON.stringify({ username: user, role }));
+
+      // Redirect after successful login
+      navigate("/editor");
+    } catch (err) {
+      console.error(err.response?.data || err.message);
+      alert(err.response?.data || "Login failed");
+    }
   };
 
   return (
@@ -20,9 +35,12 @@ export default function Login() {
       <div className="w-full max-w-md bg-gray-900 rounded-lg shadow-lg p-8">
         <h1 className="text-3xl text-white font-bold mb-6 text-center">Matty</h1>
         <h2 className="text-3xl text-white font-bold mb-6 text-center">Sign In</h2>
+
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="username" className="block mb-2 text-gray-300 font-semibold">Username</label>
+            <label htmlFor="username" className="block mb-2 text-gray-300 font-semibold">
+              Username
+            </label>
             <input
               type="text"
               id="username"
@@ -35,7 +53,9 @@ export default function Login() {
           </div>
 
           <div>
-            <label htmlFor="password" className="block mb-2 text-gray-300 font-semibold">Password </label>
+            <label htmlFor="password" className="block mb-2 text-gray-300 font-semibold">
+              Password
+            </label>
             <input
               type="password"
               id="password"
@@ -57,7 +77,9 @@ export default function Login() {
 
         <p className="mt-6 text-center text-gray-400">
           If not signup,{" "}
-          <Link to="/register" className="text-red-600 hover:text-red-800 font-semibold">Register here</Link>
+          <Link to="/register" className="text-red-600 hover:text-red-800 font-semibold">
+            Register here
+          </Link>
         </p>
 
         <div className="mt-6 flex justify-center">
