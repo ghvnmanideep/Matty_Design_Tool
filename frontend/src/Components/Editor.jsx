@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
-import Navbar from './Navbar';
-import EditNavbar from './EditNavbar';
+import Navbar from '../Header/Navbar';
+import EditNavbar from '../Header/EditNavbar';
 
 function BorderCanvas() {
   const canvasRef = useRef(null);
