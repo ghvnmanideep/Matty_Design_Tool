@@ -6,7 +6,7 @@ const initialState = {
 }
 
 const designSlice = createSlice({
-    name: designs,
+    name: "designs",
     initialState,
     reducers: {
         setDesigns: (state, action) => {
@@ -31,4 +31,4 @@ const designSlice = createSlice({
 });
 
 export const {setDesigns, addDesign, updateDesign, deleteDesign, setSelectedDesign } = designSlice.actions;
-export default deleteDesign.reducer;
+export default designSlice.reducer;
