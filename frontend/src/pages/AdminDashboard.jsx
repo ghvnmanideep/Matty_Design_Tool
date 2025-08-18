@@ -33,18 +33,35 @@ export default function AdminDashboard() {
     fetchAllDesigns();
   }, []);
 
-  // fetch users -> redux
-  useEffect(() => {
-    const fetchUsers = async () => {
+  useEffect(()=>{
+    async function fetchUsers(){
       try {
-        const res = await axiosInstance.get("/api/admin/getUsers");
-        if (res) dispatch(setAllUsers(res.data));
-      } catch (error) {
-        console.log("Error fetching allUsers", error);
+      const res = await axiosInstance.get("/api/admin/getUsers", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      if(res){
+        dispatch(setAllUsers(res.data));
+        console.log(res.data);
       }
-    };
+    } catch (error) { 
+      console.log('Error fetching allUsers',error);
+    }
+    }
     fetchUsers();
-  }, [dispatch]);
+  },[])
+
+  // fetch users -> redux
+  // useEffect(() => {
+  //   const fetchUsers = async () => {
+  //     try {
+  //       const res = await axiosInstance.get("/api/admin/getUsers");
+  //       if (res) dispatch(setAllUsers(res.data));
+  //     } catch (error) {
+  //       console.log("Error fetching allUsers", error);
+  //     }
+  //   };
+  //   fetchUsers();
+  // }, [dispatch]);
 
   // delete a design (admin)
   const handleDelete = async (designId) => {

@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { setUser } from "../store/userSlice";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import GLogin from "../Login/GLogin.jsx";
+import axiosInstance from "../utils/axiosinstance.js";
 
 const CLIENT_ID =
   "551070839040-qh22gqelveth5aaiqfan1fm43v0tvs7s.apps.googleusercontent.com";
@@ -18,11 +19,16 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(
-        (import.meta.env.VITE_API_URL || "https://matty-design-tool-uh85.onrender.com") +
-          "/api/auth/login",
-        { username, password }
-      );
+      const res = await axiosInstance.post("/api/auth/login",{ username, password });
+      //   (import.meta.env.VITE_API_URL || "https://matty-design-tool-uh85.onrender.com") +
+      //     "/api/auth/login",
+      //   { username, password }
+      // );
+      // const res = await axios.post(
+      //   (import.meta.env.VITE_API_URL || "https://matty-design-tool-uh85.onrender.com") +
+      //     "/api/auth/login",
+      //   { username, password }
+      // );
 
       const { token, _id, username: userName, role } = res.data;
 

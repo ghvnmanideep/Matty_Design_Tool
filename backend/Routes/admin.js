@@ -94,14 +94,31 @@ router.delete("/templates/:id", authenticateAdmin, async (req, res) => {
 });
 
 // Admin: get all users
-router.get("/getUsers", authenticateAdmin, async (_req, res) => {
-  try {
-    const allUsers = await User.find().sort({ createdAt: -1 });
-    res.status(200).json(allUsers);
-  } catch (error) {
-    console.log("Error fetching all users", error);
-    res.status(500).json({ message: "Error fetching all users", error });
+router.get("/getUsers",authenticateAdmin, async (req,res)=>{
+ try {  
+  const allUsers = await User.find();
+  if(allUsers){
+    res.status(201).send(allUsers);
   }
+ } catch (error) {
+  res.status(500).json({message: "Error fetching all users", error: error});
+  console.log("Error fetching all users",error);
+ }
 });
+
+//delete a user
+router.delete("/deleteUser/:id", authenticateAdmin, async (req,res)=>{
+  const { id } = req.params;
+  try {
+    const response = await User.findByIdAndDelete(id);
+    if(response){
+      res.json({message: "User deleted successfully"});
+    }
+  } catch (error) {
+    console.log("Error deleting user",error);
+  }
+})
+
+
 
 module.exports = router;
